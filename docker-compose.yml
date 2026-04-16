@@ -1,0 +1,11 @@
+services:
+  web:
+    build:
+      context: ./web_app_onnx
+    environment:
+      API_TOKEN: ${API_TOKEN:test_token}
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./web_app_onnx:/app
+    restart: unless-stopped

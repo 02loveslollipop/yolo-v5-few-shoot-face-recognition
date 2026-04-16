@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO Identity Engine (ONNX)</title>
+    <!-- Import ONNX Runtime Web for WebGL hardware execution -->
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #1a1a1a; color: white; display: flex; margin: 0; height: 100vh; overflow: hidden; }
+        #left-panel { flex: 2; display: flex; justify-content: center; align-items: center; background: #0f0f0f; position: relative; padding: 20px;}
+        #right-panel { flex: 1; min-width: 300px; padding: 40px; background: #2b2b2b; display: flex; flex-direction: column; align-items: center; border-left: 2px solid #444; }
+        
+        #video-cam { display: none; } /* Hidden, we draw to the canvas instead */
+        #output-canvas { max-width: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        
+        .greeting { font-size: 2.5rem; font-weight: bold; color: #00e5ff; margin-bottom: 40px; text-align: center; height: 3rem; }
+        .subtitle { font-size: 1.2rem; color: #bbb; margin-bottom: 15px; }
+        
+        #crop-canvas { width: 200px; height: 200px; background: #111; border: 2px dashed #555; border-radius: 8px; object-fit: cover;}
+        
+        #status { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 5px 15px; border-radius: 5px; color: #0f0; font-family: monospace;}
+        
+        #auth-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #111; display: flex; justify-content: center; align-items: center; z-index: 100; flex-direction: column;}
+        .auth-box { background: #222; padding: 40px; border-radius: 12px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .auth-input { padding: 12px; width: 250px; font-size: 16px; border: 1px solid #444; border-radius: 6px; background: #333; color: white; margin-bottom: 20px; outline: none;}
+        .auth-btn { padding: 12px 30px; font-size: 16px; background: #00d8ff; color: #111; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;}
+        .auth-btn:hover { background: #00b0d0; }
+        #auth-error { color: #ff4d4d; margin-top: 15px; min-height: 20px;}
+    </style>
+</head>
+<body>
+    <div id="auth-overlay">
+        <div class="auth-box">
+            <h2 style="margin-top:0;">Identity Engine</h2>
+            <p style="color: #aaa; margin-bottom:25px;">Enter API token to download secure model weights.</p>
+            <input type="password" id="api-token" class="auth-input" placeholder="Enter API Token..." /><br>
+            <button id="auth-btn" class="auth-btn" onclick="startApp()">Unlock Model</button>
+            <div id="auth-error"></div>
+        </div>
+    </div>
+
+    <div id="left-panel">
+        <div id="status">Loading Model...</div>
+        <video id="video-cam" autoplay playsinline muted></video>
+        <canvas id="output-canvas"></canvas>
+    </div>
+
+    <div id="right-panel">
+        <div class="greeting" id="greeting-txt">Waiting...</div>
+        <div class="subtitle">Last Detection:</div>
+        <canvas id="crop-canvas"></canvas>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
